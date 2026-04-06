@@ -167,14 +167,6 @@
             <label><input type="radio" name="dealer" value="seven"> 쎄븐유</label>
           </div>
         </div>
-        <div class="field-row">
-          <div class="field-label req">제품</div>
-          <select id="product" style="max-width:200px;" onchange="onProductChange()">
-            <option value="GMPP">GMPP</option>
-            <option value="VBP">VBP (Vbeam Perfecta)</option>
-            <option value="PICOWAY">PICOWAY</option>
-          </select>
-        </div>
       </div>
     </div>
 
@@ -195,10 +187,7 @@
         </div>
         <div class="field-row">
           <div class="field-label req">S/N (시리얼 번호)</div>
-          <div class="sn-wrap">
-            <div class="sn-prefix" id="sn_prefix">9914-9036-</div>
-            <input type="text" id="sn_suffix" placeholder="나머지 번호 입력" style="flex:1;">
-          </div>
+          <input type="text" id="sn_full" placeholder="예: 39322-23222-33232" style="font-family:'Consolas','Courier New',monospace; letter-spacing:0.5px; flex:1;">
         </div>
       </div>
     </div>
@@ -258,17 +247,6 @@ const ENG_B64 = "UEsDBBQABgAIAAAAIQAWd2MPlgEAAOAHAAATAAgCW0NvbnRlbnRfVHlwZXNdLnh
 
 const pad = n => String(n).padStart(2,'0');
 
-// ── 제품별 S/N 프리픽스 ──
-const SN_PREFIX = {
-  GMPP:    '9914-9036-',
-  VBP:     '9914-0300-',
-  PICOWAY: '9914-9060-',
-};
-function onProductChange() {
-  const prod = document.getElementById('product').value;
-  document.getElementById('sn_prefix').textContent = SN_PREFIX[prod] || '';
-}
-
 const today = new Date();
 const todayISO = today.getFullYear()+'-'+pad(today.getMonth()+1)+'-'+pad(today.getDate());
 
@@ -325,14 +303,12 @@ function updatePreview() {
 
 function resetForm() {
   if (!confirm('입력 내용을 초기화할까요?')) return;
-  ['kor_name','eng_name','contract_no','sn_suffix'].forEach(id => {
+  ['kor_name','eng_name','contract_no','sn_full'].forEach(id => {
     document.getElementById(id).value = '';
   });
   document.getElementById('install_date').value = todayISO;
   document.getElementById('start_date').value = todayISO;
   document.querySelector('input[name=dealer][value=direct]').checked = true;
-  document.getElementById('product').value = 'GMPP';
-  document.getElementById('sn_prefix').textContent = SN_PREFIX['GMPP'];
   addMonths(3);
   updatePreview();
 }
@@ -439,8 +415,7 @@ async function generateDoc(lang) {
   const korName    = document.getElementById('kor_name').value.trim();
   const engName    = document.getElementById('eng_name').value.trim();
   const contractNo = document.getElementById('contract_no').value.trim();
-  const snFull     = document.getElementById('sn_prefix').textContent
-                   + document.getElementById('sn_suffix').value.trim();
+  const snFull     = document.getElementById('sn_full').value.trim();
   const installDate = document.getElementById('install_date').value;
   const startDate   = document.getElementById('start_date').value;
   const endDate     = document.getElementById('end_date').value;
