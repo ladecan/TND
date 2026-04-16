@@ -103,14 +103,6 @@
   .radio-group { display: flex; gap: 22px; flex: 1; }
   .radio-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; }
   .radio-group input[type=radio] { accent-color: var(--accent); width:14px; height:14px; }
-  .sn-wrap { flex: 1; display: flex; align-items: center; gap: 6px; min-width: 0; }
-  .sn-prefix {
-    font-size: 13px; color: #444; white-space: nowrap;
-    background: #eef2f8; border: 1px solid var(--border);
-    border-radius: 5px; padding: 8px 10px;
-    font-weight: 700; font-family: 'Consolas','Courier New',monospace; letter-spacing: 0.5px;
-  }
-  #sn_suffix { font-family: 'Consolas','Courier New',monospace; letter-spacing: 0.5px; }
   .quick-btns {
     display: flex; gap: 6px; flex-wrap: wrap;
     margin-top: 10px;
@@ -186,7 +178,7 @@
           <input type="text" id="contract_no" placeholder="예: SC-2026-001">
         </div>
         <div class="field-row">
-          <div class="field-label req">S/N (시리얼 번호)</div>
+          <div class="field-label">S/N (시리얼 번호)</div>
           <input type="text" id="sn_full" placeholder="예: 39322-23222-33232" style="font-family:'Consolas','Courier New',monospace; letter-spacing:0.5px; flex:1;">
         </div>
       </div>
@@ -415,7 +407,7 @@ async function generateDoc(lang) {
   const korName    = document.getElementById('kor_name').value.trim();
   const engName    = document.getElementById('eng_name').value.trim();
   const contractNo = document.getElementById('contract_no').value.trim();
-  const snFull     = document.getElementById('sn_full').value.trim() || '&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;';
+  const snFull     = document.getElementById('sn_full').value.trim() || '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0';
   const installDate = document.getElementById('install_date').value;
   const startDate   = document.getElementById('start_date').value;
   const endDate     = document.getElementById('end_date').value;
