@@ -440,7 +440,8 @@ async function generateDoc(lang) {
   try {
     const [y, m, d] = installDate.split('-');
     const dp = y+'.'+m+'.'+d;
-    const baseFilename = dp+' '+korName+' TnB 계약서.docx';
+    const korFilename = dp+' '+korName+' TnB 계약서.docx';
+    const engFilename = dp+' '+engName+' TnB Contract.docx';
 
     let blob;
 
@@ -463,7 +464,7 @@ async function generateDoc(lang) {
         { find: '{{end}} ',                         replace: fmtKor(endDate)+' ' },
       ];
       blob = await processDocx(KOR_B64, korReplacements);
-      triggerDownload(blob, 'KOR_'+baseFilename);
+      triggerDownload(blob, 'KOR_'+korFilename);
 
     } else {
       // ENG 플레이스홀더 패턴:
@@ -483,7 +484,7 @@ async function generateDoc(lang) {
         { find: ['{{ end', ' ', '}}'],                 replace: fmtEng(endDate) },
       ];
       blob = await processDocx(ENG_B64, engReplacements);
-      triggerDownload(blob, 'ENG_'+baseFilename);
+      triggerDownload(blob, 'ENG_'+engFilename);
     }
 
     btn.innerHTML = '✅ 완료!';
