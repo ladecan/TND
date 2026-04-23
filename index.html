@@ -374,6 +374,15 @@ function xmlTextReplace(xml, findTexts, replacement) {
   return newXml;
 }
 
+function escapeXml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 async function processDocx(b64, replacements) {
   const bytes = b64ToUint8(b64);
   const zip = await JSZip.loadAsync(bytes);
@@ -407,6 +416,9 @@ async function generateDoc(lang) {
   const korName    = document.getElementById('kor_name').value.trim();
   const engName    = document.getElementById('eng_name').value.trim();
   const contractNo = document.getElementById('contract_no').value.trim();
+  const korNameEsc    = escapeXml(korName);
+  const engNameEsc    = escapeXml(engName);
+  const contractNoEsc = escapeXml(contractNo);
   const snFull     = document.getElementById('sn_full').value.trim() || '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0';
   const installDate = document.getElementById('install_date').value;
   const startDate   = document.getElementById('start_date').value;
@@ -442,9 +454,9 @@ async function generateDoc(lang) {
       //   start:       ['{{', 'start', '}', '}']  ← 4-run
       //   end:         단일 '{{end}} '
       const korReplacements = [
-        { find: ['{{ KOR', ' ', '병원명 }', '} '], replace: korName+' ' },
-        { find: ['{{ KOR', ' ', '병원명 }', '}'],  replace: korName },
-        { find: ['{{Contract No.', '}', '}'],       replace: contractNo },
+        { find: ['{{ KOR', ' ', '병원명 }', '} '], replace: korNameEsc+' ' },
+        { find: ['{{ KOR', ' ', '병원명 }', '}'],  replace: korNameEsc },
+        { find: ['{{Contract No.', '}', '}'],       replace: contractNoEsc },
         { find: ['{{S/N}', '} '],                   replace: snFull+' ' },
         { find: '{{install}}',                      replace: fmtKor(installDate) },
         { find: ['{{', 'start', '}', '}'],          replace: fmtKor(startDate) },
@@ -463,8 +475,8 @@ async function generateDoc(lang) {
       //   start:       ['{{', 'start', '}}']  ← 3-run
       //   end:         ['{{ end', ' ', '}}']
       const engReplacements = [
-        { find: ['{{ ENG', ' ', '병원명 }', '}'],      replace: engName },
-        { find: [' {{', 'Contract ', 'No.', '}', '}'], replace: ' '+contractNo },
+        { find: ['{{ ENG', ' ', '병원명 }', '}'],      replace: engNameEsc },
+        { find: [' {{', 'Contract ', 'No.', '}', '}'], replace: ' '+contractNoEsc },
         { find: ['{{', 'install', '}} '],              replace: fmtEng(installDate)+' ' },
         { find: ['{[S/N', ']', '}'],                   replace: snFull },
         { find: ['{{', 'start', '}}'],                 replace: fmtEng(startDate) },
